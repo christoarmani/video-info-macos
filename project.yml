@@ -1,0 +1,149 @@
+# Video Info — XcodeGen spec.
+#
+#   Vendor/build-mediainfo.sh   # once: builds the static MediaInfo library into Vendor/out
+#   xcodegen generate           # writes VideoInfo.xcodeproj
+
+name: VideoInfo
+
+options:
+  bundleIdPrefix: com.christoarmani
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    ARCHS: arm64
+    DEVELOPMENT_TEAM: 4Z4N8C379F
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: Apple Development
+    ENABLE_HARDENED_RUNTIME: YES
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # The MediaInfo C functions (UTF-8 variants), linked statically.
+    SWIFT_OBJC_BRIDGING_HEADER: Shared/MediaInfoC.h
+    OTHER_LDFLAGS: ["$(SRCROOT)/Vendor/out/lib/libmediainfo.a", "$(SRCROOT)/Vendor/out/lib/libzen.a", "-lc++", "-lz"]
+
+targets:
+  VideoInfo:
+    type: application
+    platform: macOS
+    sources: [App, Shared]
+    dependencies:
+      - target: FinderExtension
+      - target: PreviewExtension
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSHumanReadableCopyright: "© 2026 christoarmani"
+        # Open With → Video Info, and drops on the Dock icon. Rank None: never the default app.
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Video
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: None
+            LSItemContentTypes: [public.movie]
+        # videoinfo:///open?path=… — how the Finder extension hands over files (a sandboxed
+        # extension can't pass the files themselves to another app).
+        CFBundleURLTypes:
+          - CFBundleURLName: com.christoarmani.videoinfo
+            CFBundleURLSchemes: [videoinfo]
+        # Finder → right-click → Services → Video Info (backup for the Finder extension).
+        NSServices:
+          - NSMenuItem:
+              default: Video Info
+            NSMessage: showVideoInfo
+            NSPortName: Video Info
+            NSRequiredContext: {}
+            NSSendFileTypes: [public.movie]
+    entitlements:
+      path: App/VideoInfo.entitlements
+      properties:
+        # Sandboxed with no network entitlement: the app can't go online at all.
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-only: true
+        # Read-only access to every file, so videos named by the Finder extension can be read.
+        com.apple.security.temporary-exception.files.absolute-path.read-only: ["/"]
+        # Shared settings (Quick Look on/off) with the preview extension.
+        com.apple.security.application-groups: ["4Z4N8C379F.com.christoarmani.videoinfo"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.christoarmani.videoinfo
+        PRODUCT_NAME: Video Info
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Video Info
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        COMBINE_HIDPI_IMAGES: YES
+
+  FinderExtension:
+    type: app-extension
+    platform: macOS
+    sources: [FinderExtension]
+    info:
+      path: FinderExtension/Info.plist
+      properties:
+        CFBundleDisplayName: Video Info
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.FinderSync
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).FinderSync
+    entitlements:
+      path: FinderExtension/FinderExtension.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        # Read-only access to every file, to read the first bytes of .ts files.
+        com.apple.security.temporary-exception.files.absolute-path.read-only: ["/"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.christoarmani.videoinfo.FinderExtension
+        SWIFT_OBJC_BRIDGING_HEADER: ""
+        OTHER_LDFLAGS: []
+
+  PreviewExtension:
+    type: app-extension
+    platform: macOS
+    sources: [QuickLook, Shared]
+    info:
+      path: QuickLook/Info.plist
+      properties:
+        CFBundleDisplayName: Video Info
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewViewController
+          NSExtensionAttributes:
+            QLSupportedContentTypes: [io.iina.mkv, org.matroska.mkv, public.avi, com.microsoft.windows-media-wmv, public.mpeg-4, com.apple.quicktime-movie]
+            QLSupportsSearchableItems: false
+    entitlements:
+      path: QuickLook/QuickLook.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-only: true
+        com.apple.security.application-groups: ["4Z4N8C379F.com.christoarmani.videoinfo"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.christoarmani.videoinfo.QuickLook
+
+  VideoInfoTests:
+    type: bundle.unit-test
+    platform: macOS
+    # Compiles the parser directly instead of hosting the app, so tests never open windows.
+    sources: [Tests, Shared/MediaReport.swift]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.christoarmani.videoinfo.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  VideoInfo:
+    build:
+      targets:
+        VideoInfo: all
+    test:
+      targets: [VideoInfoTests]
