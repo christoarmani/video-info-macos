@@ -52,7 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func showWelcome() {
         if welcome == nil {
-            let window = NSWindow(contentViewController: NSHostingController(rootView: WelcomeView { [weak self] in self?.showOpenPanel() }))
+            let window = NSWindow(contentViewController: NSHostingController(rootView: acceptingVideos(WelcomeView { [weak self] in self?.showOpenPanel() })))
             window.styleMask = [.titled, .closable]
             window.title = "Video Info"
             window.isReleasedWhenClosed = false
@@ -79,7 +79,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 560, height: 720),
                               styleMask: [.titled, .closable, .miniaturizable, .resizable],
                               backing: .buffered, defer: false)
-        window.contentViewController = NSHostingController(rootView: InfoView(url: url) { [weak window] in window?.close() })
+        window.contentViewController = NSHostingController(rootView: acceptingVideos(InfoView(url: url) { [weak window] in window?.close() }))
         window.setContentSize(NSSize(width: 560, height: 720))
         window.contentMinSize = NSSize(width: 420, height: 320)
         window.title = url.lastPathComponent
@@ -89,6 +89,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.makeKeyAndOrderFront(nil)
         welcome?.close()
         NSApp.activate()
+    }
+
+    /// Videos dropped on a window each open in their own info window.
+    private func acceptingVideos(_ view: some View) -> some View {
+        view.dropDestination(for: URL.self) { [weak self] urls, _ in
+            let videos = urls.filter { (try? $0.resourceValues(forKeys: [.contentTypeKey]))?.contentType?.conforms(to: .movie) == true }
+            videos.forEach { self?.showInfo(for: $0) }
+            return !videos.isEmpty
+        }
     }
 
     /// Services menu → "Video Info" (backup for when the Finder extension is off).
