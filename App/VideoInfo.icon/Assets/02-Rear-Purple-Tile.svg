@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+
+<defs>
+  <linearGradient id="backColor" x1=".22" y1="0" x2=".92" y2="1">
+    <stop offset="0" stop-color="#455DA2"/>
+    <stop offset=".20" stop-color="#8650B3"/>
+    <stop offset=".48" stop-color="#7943A8"/>
+    <stop offset="1" stop-color="#392052"/>
+  </linearGradient>
+  <linearGradient id="backSoft" x1="0" y1="0" x2=".8" y2="1">
+    <stop offset="0" stop-color="#C190EE" stop-opacity=".22"/>
+    <stop offset=".44" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset="1" stop-color="#05040E" stop-opacity=".24"/>
+  </linearGradient>
+</defs>
+<!-- Rear angled purple card -->
+<path d="M 369 271 C 374 240 392 223 432 213 L 718 149 C 800 128 879 171 883 256 L 883 620 C 883 674 854 699 800 714 L 369 775 Z" fill="url(#backColor)"/>
+<path d="M 369 271 C 374 240 392 223 432 213 L 718 149 C 800 128 879 171 883 256 L 883 620 C 883 674 854 699 800 714 L 369 775 Z" fill="url(#backSoft)"/>
+
+</svg>

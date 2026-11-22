@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+
+<defs>
+  <linearGradient id="whitePlay" x1="0" y1="0" x2=".8" y2="1">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset=".45" stop-color="#F2F9FF"/>
+    <stop offset="1" stop-color="#CADFFC"/>
+  </linearGradient>
+</defs>
+<!-- Soft-cornered classic play triangle, with actual vector path -->
+<path d="M 354 518 C 354 505 367 497 378 502 L 542 602 C 557 611 557 628 542 637 L 378 737 C 367 744 354 736 354 723 Z" fill="url(#whitePlay)"/>
+
+</svg>

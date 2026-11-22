@@ -74,6 +74,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.christoarmani.videoinfo
         PRODUCT_NAME: Video Info
+        ASSETCATALOG_COMPILER_APPICON_NAME: VideoInfo # App/VideoInfo.icon (Icon Composer)
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Video Info
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities

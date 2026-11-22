@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+
+<defs>
+  <linearGradient id="midColor" x1="0" y1="0" x2="1" y2=".28">
+    <stop offset="0" stop-color="#4FA6F1"/>
+    <stop offset=".38" stop-color="#5B87EB"/>
+    <stop offset=".65" stop-color="#7059E5"/>
+    <stop offset="1" stop-color="#33207D"/>
+  </linearGradient>
+  <linearGradient id="midShade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#D5E7FF" stop-opacity=".16"/>
+    <stop offset=".40" stop-color="#FFFFFF" stop-opacity="0"/>
+    <stop offset="1" stop-color="#120B4D" stop-opacity=".19"/>
+  </linearGradient>
+</defs>
+<!-- Middle blue-violet rounded tile -->
+<rect x="263" y="283" width="550" height="517" rx="88" fill="url(#midColor)"/>
+<rect x="263" y="283" width="550" height="517" rx="88" fill="url(#midShade)"/>
+
+</svg>

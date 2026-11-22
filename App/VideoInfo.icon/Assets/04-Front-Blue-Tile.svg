@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+
+<defs>
+  <linearGradient id="frontColor" x1="0" y1="0" x2="1" y2=".23">
+    <stop offset="0" stop-color="#58C6FD"/>
+    <stop offset=".31" stop-color="#3797EC"/>
+    <stop offset=".57" stop-color="#476BDD"/>
+    <stop offset=".77" stop-color="#7358E6"/>
+    <stop offset="1" stop-color="#5131B5"/>
+  </linearGradient>
+  <linearGradient id="frontLighting" x1=".12" y1="0" x2=".9" y2=".93">
+    <stop offset="0" stop-color="#86DDFD" stop-opacity=".26"/>
+    <stop offset=".35" stop-color="#E5EBFF" stop-opacity="0"/>
+    <stop offset="1" stop-color="#201582" stop-opacity=".20"/>
+  </linearGradient>
+</defs>
+<!-- Front card, clean rounded rectangle -->
+<rect x="153" y="368" width="574" height="505" rx="90" fill="url(#frontColor)"/>
+<rect x="153" y="368" width="574" height="505" rx="90" fill="url(#frontLighting)"/>
+
+</svg>
